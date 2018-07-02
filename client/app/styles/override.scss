@@ -1,0 +1,59 @@
+nav ul a,
+nav .brand-logo {
+  color: #fff;
+}
+
+p {
+  line-height: 2rem;
+}
+
+.sidenav-trigger {
+  color: #26a69a;
+}
+
+.section.no-pad-bot {
+  padding-bottom: 1.5rem;
+}
+
+.section {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  width: 100%;
+}
+
+.banner-container, .middle-container, .parallax-container {
+  line-height: 0;
+  height: auto;
+  color: rgba(255,255,255,.9);
+}
+  .banner-container .section, .middle-container .section, .parallax-container .section {
+    width: 100%;
+  }
+
+@media only screen and (max-width : 992px) {
+  .banner-container .section, .parallax-container .section {
+    position: absolute;
+    top: 60%;
+  }
+  #index-banner .section {
+    top: 10%;
+  }
+}
+
+@media only screen and (max-width : 600px) {
+  #index-banner .section {
+    top: 0;
+  }
+}
+
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+  font-size: inherit;
+}
+
+.page-footer {
+  padding-top: 10px;
+  padding-bottom: 20px;
+}

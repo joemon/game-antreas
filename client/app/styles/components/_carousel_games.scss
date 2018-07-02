@@ -1,0 +1,28 @@
+.carousel-image {
+
+    &__header {
+        font-size: 3rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .2rem;
+        background-image: linear-gradient(to right, var(--color-primary-light), var(--color-primary-dark));
+        -webkit-background-clip: text;
+        color: transparent;
+        transform: translate(46%, 30%);
+    }
+
+    &__container {
+        max-width: 40rem;
+        max-height: 40rem;
+        padding: 1rem;
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.slick-prev:before, .slick-next:before {
+    color: var(--color-primary-dark);
+}

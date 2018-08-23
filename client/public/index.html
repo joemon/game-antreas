@@ -1,21 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <title>Gamelearn</title>
+	<title>Gamelearn</title>
 
-   <!--Import Google Icon Font-->
-   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!--Import Google Icon Font-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-   <!--Let browser know website is optimized for mobile-->
-   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	
+	<!--Import css and javascript files to load the game-->
+	<link rel="shortcut icon" href="Build/TemplateData/favicon.ico">
+    <link rel="stylesheet" href="Build/TemplateData/style.css">
+    <script src="Build/TemplateData/UnityProgress.js"></script>  
+    <script src="Build/Build/UnityLoader.js"></script>
+    <script>
+		var gameInstance = UnityLoader.instantiate("gameContainer", "Build/Build/Build.json", {onProgress: UnityProgress});
+    </script>
   
 </head>
 <body>
-  <div id="app"></div>
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script type="text/javascript" src="materialize.js"></script>
+	<div id="app"></div>
+	<div class="webgl-content">
+		<div id="gameContainer" style="width: 960px; height: 600px"></div>
+		<div class="footer">
+			<div class="webgl-logo"></div>
+			<div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
+			<div class="title">game</div>
+		</div>
+	</div>
+	
+	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="materialize.js"></script>
 </body>
 </html>

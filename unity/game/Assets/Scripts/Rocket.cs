@@ -53,7 +53,6 @@ public class Rocket : MonoBehaviour {
                 audioSource.PlayOneShot(winLevel);
                 winLevelParticle.Play();
                 Invoke( "CompleteLevel", 1f);
-               // Invoke("LoadNextScene", 1.5f);
                 break;
             default:
                 state = State.Dying;
@@ -69,14 +68,18 @@ public class Rocket : MonoBehaviour {
     public void CompleteLevel()
     {
         completeLevelUI.SetActive(true);
-       
-        
     }
 
     private void LoadNextScene()
     {
         if (state == State.WinStage) {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            if (SceneManager.GetActiveScene().buildIndex == SceneManager.sceneCountInBuildSettings) {
+                SceneManager.LoadScene(0);
+            }
+            else {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            }
+
         }
         else if (state == State.Dying){    
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -105,11 +108,11 @@ public class Rocket : MonoBehaviour {
 
         float rotationThisFrame = rcsThrust * Time.deltaTime;
 
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             transform.Rotate(Vector3.forward * rotationThisFrame);
         }
-        else if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.RightArrow))
         {
             transform.Rotate(-Vector3.forward * rotationThisFrame);
         }

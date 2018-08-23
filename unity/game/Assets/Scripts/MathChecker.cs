@@ -75,7 +75,7 @@ public class MathChecker : MonoBehaviour {
     {
         if (input == password)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            LoadNextLevel();
         }
         else
         {
@@ -85,4 +85,16 @@ public class MathChecker : MonoBehaviour {
         }
     }
 
+    private static void LoadNextLevel()
+    {
+        if (SceneManager.GetActiveScene().buildIndex + 1 == SceneManager.sceneCountInBuildSettings)
+        {
+            Debug.Log("AAAAAAAAAAA");
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+    }
 }

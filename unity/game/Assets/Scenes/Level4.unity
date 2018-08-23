@@ -592,6 +592,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114885992574322808, guid: cf00df93a8b447a40ab57018bbcd5b15,
+        type: 2}
+      propertyPath: rocket
+      value: 
+      objectReference: {fileID: 1591157919}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf00df93a8b447a40ab57018bbcd5b15, type: 2}
   m_IsPrefabParent: 0
@@ -793,6 +798,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6eadbf57adab1b841acd229ce18059a7, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1591157919 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1498133279964664, guid: 6eadbf57adab1b841acd229ce18059a7,
+    type: 2}
+  m_PrefabInternal: {fileID: 1591157918}
 --- !u!1 &1701759057 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1547703930738790, guid: 9adeba96a95bfc341b716a98bdc3247c,

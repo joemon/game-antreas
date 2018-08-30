@@ -13,7 +13,8 @@ public class MathChecker : MonoBehaviour {
 
     string[] level3Εquations = { "(8 * 7 - 1) / (1 + (15 * 4 / 6)) = ?", "(5^2 + 5) / ( 3 * ( 5 * 4 / 10 / 2 )) = ?", "(9 * 7) * ( 2^3 / (8 - 2 * 2)) = ?" };
     string[] level3Passwords = { "5", "10", "126" };
-
+    
+    /*
     public Text message;
     public Text equation;
     public InputField inputField;
@@ -97,4 +98,5 @@ public class MathChecker : MonoBehaviour {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
+    */
 }

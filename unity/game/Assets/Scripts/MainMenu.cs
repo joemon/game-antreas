@@ -8,12 +8,12 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour {
     public Slider slider;
     public Toggle toggle;
+   
 
     // Use this for initialization
     void Start()
     {
         slider.value = PlayerPrefs.GetFloat("VolumeLevel");
-        Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + PlayerPrefs.GetString("FullScreen"));
         if(PlayerPrefs.GetString("FullScreen") == "true")
         {
             toggle.isOn = true;

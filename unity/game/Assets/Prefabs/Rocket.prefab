@@ -217,7 +217,8 @@ AudioSource:
   m_GameObject: {fileID: 1713330524936026}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 776a38968e4562f448a81623b6f7f82c,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 80e440a76c5473d4c955c0be7f9bfb04, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.4
@@ -325,7 +326,6 @@ MonoBehaviour:
   mainEngineParticle: {fileID: 198834053216193362}
   winLevelParticle: {fileID: 198242113209531636}
   deathParticle: {fileID: 198764602131518782}
-  completeLevelUI: {fileID: 0}
   answers:
   - {fileID: 0}
   - {fileID: 0}
@@ -342,7 +342,15 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   equation: {fileID: 0}
+  completeLevelUI: {fileID: 0}
+  failedLevelUI: {fileID: 0}
+  totalScoreText: {fileID: 0}
+  highScore: {fileID: 0}
+  txtFile: equations
 --- !u!198 &198242113209531636
 ParticleSystem:
   m_ObjectHideFlags: 1

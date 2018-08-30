@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
-
+    public AudioMixer audioMixer;
     public static GameManager instance = null;
 
     // Variable for update and display the current score
@@ -17,7 +18,14 @@ public class GameManager : MonoBehaviour {
     public GameObject timerObject;
     Text timerText;
     float timeLeft = 300.0f;
+    
+    private void Start()
+    {
+        audioMixer = GetComponent<AudioMixer>();
 
+        
+    }
+    
     void Update()
     {
         timeLeft = timeLeft - Time.deltaTime;
@@ -62,5 +70,9 @@ public class GameManager : MonoBehaviour {
         return score;
     }
 
+    public void Exit()
+    {
+        SceneManager.LoadScene(0);
+    }
 
 }

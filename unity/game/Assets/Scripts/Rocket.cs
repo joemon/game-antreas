@@ -263,6 +263,7 @@ public class Rocket : MonoBehaviour {
         catch (System.Exception e)
         {
             System.Console.WriteLine("{0}\n", e.Message);
+            System.Console.WriteLine("{0}\n", e.Message);
             return false;
         }
     }
@@ -277,7 +278,7 @@ public class Rocket : MonoBehaviour {
         int index = -1;
         int i =0;
 
-        Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!111111111111!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         for (i=0; i< answers.Length; i++)
         {
             checker = answers[i].GetComponent<Checker>();

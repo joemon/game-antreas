@@ -611,6 +611,12 @@ Prefab:
       propertyPath: equation
       value: 
       objectReference: {fileID: 1987307028}
+    - target: {fileID: 82965567810183712, guid: 57fead7d0881f7742bccb1bf8f99f711,
+        type: 2}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: 776a38968e4562f448a81623b6f7f82c,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 57fead7d0881f7742bccb1bf8f99f711, type: 2}
   m_IsPrefabParent: 0

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿//using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,7 +15,9 @@ public class Rocket : MonoBehaviour {
     [SerializeField] ParticleSystem deathParticle;
 
     public GameObject completeLevelUI;
-   
+
+    GameObject[] answers;
+    Checker checker;
 
     enum State { Alive, Dying, WinStage}
     State state = State.Alive;
@@ -25,10 +25,27 @@ public class Rocket : MonoBehaviour {
     Rigidbody rigidBody;
     AudioSource audioSource;
 
+
+    string password;
+    int counter;
+
+    string[] level1Εquations = { "8 + 5 * 2 = ?", "15 + 16 / 2 = ?", "12 * 4 - 3 = ?", "11 * 12 - 20 = ?" };
+    string[] level1Passwords = { "18", "23", "45", "112" };
+
+    string[] level2Εquations = { "8 * (8 - 6 / 3) = ?", "10 * 3 / (4 + 1 * 2) = ?", "(144 / (3 * 6 - 6)", "9 * (48 / 2 / 2)" };
+    string[] level2Passwords = { "48", "5", "12", "108" };
+
+    string[] level3Εquations = { "(8 * 7 - 1) / (1 + (15 * 4 / 6)) = ?", "(5^2 + 5) / ( 3 * ( 5 * 4 / 10 / 2 )) = ?", "(9 * 7) * ( 2^3 / (8 - 2 * 2)) = ?" };
+    string[] level3Passwords = { "5", "10", "126" };
+
+
+
+
     // Use this for initialization
     void Start () {
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
+        SetAnswers();
     }
 	
 	// Update is called once per frame
@@ -39,6 +56,7 @@ public class Rocket : MonoBehaviour {
         }
     }
 
+   
     private void OnCollisionEnter(Collision collision)
     {
         if (state != State.Alive){ return; }
@@ -53,6 +71,22 @@ public class Rocket : MonoBehaviour {
                 audioSource.PlayOneShot(winLevel);
                 winLevelParticle.Play();
                 Invoke( "CompleteLevel", 1f);
+                break;
+            case "Num":
+                if (collision.gameObject.GetComponent<Checker>().number.text == password)
+                {
+                    //Play a sound
+                    return;
+                }
+                else
+                {
+                    state = State.Dying;
+                    audioSource.Stop();
+                    audioSource.PlayOneShot(death);
+                    deathParticle.Play();
+                    mainEngineParticle.Stop();
+                    Invoke("LoadNextScene", 1f);
+                }
                 break;
             default:
                 state = State.Dying;
@@ -119,5 +153,52 @@ public class Rocket : MonoBehaviour {
 
         rigidBody.freezeRotation = false;
     }
+
+    private void SetAnswers()
+    {
+        
+        if (answers == null)
+            answers = GameObject.FindGameObjectsWithTag("Num");
+
+        checker = GameObject.FindGameObjectWithTag("Num").GetComponent<Checker>();
+        
+        answers[0].GetComponent<Checker>().number.text = "100";
+        answers[1].GetComponent<Checker>().number.text = "100";
+        answers[2].GetComponent<Checker>().number.text = "100";
+        Debug.Log(answers.Length);
+
+        
+
+        int index = -1;
+        int i =0;
+        for (i=0; i< answers.Length; i++)
+        {
+            checker = answers[i].GetComponent<Checker>();
+            checker.number.text = Random.Range(0, 100).ToString();
+
+        }
+
+        for (i = 2; i < answers.Length; i=i+3)
+        {
+            index = Random.Range(0, level1Passwords.Length);
+            password = level1Passwords[index];
+            //equation.text = level1Εquations[index];
+
+            int temp = Random.Range(i - 2, i);
+            checker = answers[temp].GetComponent<Checker>();
+            answers[temp].GetComponent<BoxCollider>().enabled = false;
+            answers[temp].GetComponent<BoxCollider>().isTrigger = true;
+            checker.number.text = level1Passwords[index];
+            
+
+
+            Debug.Log(checker.number.ToString());
+            Debug.Log(password);
+
+        }
+        
+        
+    }
+
 
 }

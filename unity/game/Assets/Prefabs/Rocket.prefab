@@ -321,11 +321,18 @@ MonoBehaviour:
   winLevel: {fileID: 8300000, guid: f6478fbac76107847ae0cea861077514, type: 3}
   death: {fileID: 8300000, guid: 8a1c9566aed972844a250802c165f69b, type: 3}
   correctAnswer: {fileID: 8300000, guid: b4f377b564325d046a983ed9ec56e853, type: 3}
+  wrongAnswer: {fileID: 8300000, guid: 2819ebfb31b1e6d49b9ad97d7a866d7d, type: 3}
   mainEngineParticle: {fileID: 198834053216193362}
   winLevelParticle: {fileID: 198242113209531636}
   deathParticle: {fileID: 198764602131518782}
   completeLevelUI: {fileID: 0}
   answers:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour {
 
     }
 
-    public void UpdateScore(int points=100)
+    public void UpdateScore(int points)
     {
         score = score + points;
         scoreText.text = score.ToString();

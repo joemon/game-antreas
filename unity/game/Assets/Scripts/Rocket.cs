@@ -41,7 +41,7 @@ public class Rocket : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        //PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteAll();
 
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();

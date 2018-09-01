@@ -13,6 +13,7 @@ public class MainMenu : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        // Every time the game starts, load the preferences of the player for volume and fullscreen
         slider.value = PlayerPrefs.GetFloat("VolumeLevel");
         if(PlayerPrefs.GetString("FullScreen") == "true")
         {
@@ -23,8 +24,9 @@ public class MainMenu : MonoBehaviour {
             toggle.isOn = false;
         }
     }
-    
 
+
+    // If the player clicks on play button then the next scene has to load
     public void StartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);

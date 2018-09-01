@@ -13,8 +13,8 @@ public class LevelsManager : MonoBehaviour {
     // Use this for initialization
     void Start() {
         //PlayerPrefs.DeleteKey("LevelsState");
+
         levelsState = PlayerPrefs.GetInt("LevelsState");
-        Debug.Log(PlayerPrefs.GetInt("LevelsState"));
         unlockLevels(levelsState);
     }
 

@@ -5,60 +5,39 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 public class Rocket : MonoBehaviour {
     [SerializeField] float rcsThrust = 100f;
     [SerializeField] float mainThrust = 100f;
 
+    // Variables for the audioclips
     [SerializeField] AudioClip mainEngine;
     [SerializeField] AudioClip winLevel;
     [SerializeField] AudioClip death;
     [SerializeField] AudioClip correctAnswer;
     [SerializeField] AudioClip wrongAnswer;
 
+    // Variable for the particles of the rocket for engine fire and death explotion
     [SerializeField] ParticleSystem mainEngineParticle;
-    [SerializeField] ParticleSystem winLevelParticle;
     [SerializeField] ParticleSystem deathParticle;
 
-    
-
-
-    //GameObject[] ansObstacles;
+    enum State { Alive, Dying, WinStage }
+    State state = State.Alive;
 
     public GameObject[] answers;
     Checker checker;
-
-    enum State { Alive, Dying, WinStage}
-    State state = State.Alive;
-
+    
     Rigidbody rigidBody;
     AudioSource audioSource;
 
-
-    
-    string[] level1Εquations = { "8 + 5 * 2 =", "15 + 16 / 2 =", "12 * 4 - 3 =", "11 * 12 - 20 =", "6 * 5 =", "7 * 4 =", "8 * 8 =" };
-    string[] level1Passwords = { "18", "23", "45", "112", "30", "28", "64" };
-
-
     Dictionary<string, string> allTheEquations;
-
     Dictionary<string, string> selectedEquations;
 
-    string password;
-    int counter;
     public Text equation;
-
-    public GameObject completeLevelUI;
-    public GameObject failedLevelUI;
-
-    public Text totalScoreText;
-    public Text highScore;
-
-    public string txtFile = "equations";
-    string txtContents;
-
-    // For the unlock of the new levels
-    int levelPassed, currentScene;
+    int counter;
+    
+    
 
     // Use this for initialization
     void Start () {
@@ -67,17 +46,11 @@ public class Rocket : MonoBehaviour {
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
 
-        currentScene = SceneManager.GetActiveScene().buildIndex;
-        levelPassed = PlayerPrefs.GetInt("LevelsState");
-
-        
-        highScore.text = "High Score: " + PlayerPrefs.GetInt("HighScore" + currentScene.ToString()).ToString();
-
         allTheEquations = new Dictionary<string, string>();
         selectedEquations = new Dictionary<string, string>();
 
         // Load text file
-        TextAsset textAssets = (TextAsset)Resources.Load(txtFile);
+        TextAsset textAssets = (TextAsset)Resources.Load("equations");
         LoadEquations(textAssets);
 
         SetAnswers();
@@ -104,7 +77,6 @@ public class Rocket : MonoBehaviour {
                 state = State.WinStage;
                 audioSource.Stop();
                 audioSource.PlayOneShot(winLevel);
-                winLevelParticle.Play();
                 Invoke("CompleteLevel", 1f);
                 break;
             default:
@@ -113,7 +85,7 @@ public class Rocket : MonoBehaviour {
                 audioSource.PlayOneShot(death);
                 deathParticle.Play();
                 mainEngineParticle.Stop();
-                Invoke("LoadNextScene", 1f);
+                Invoke("ReloadLevel", 1f);
                 break;
         }
     }
@@ -163,52 +135,19 @@ public class Rocket : MonoBehaviour {
         }
     }
 
-
+    // If the player manage to finish a level
     public void CompleteLevel()
     {
-        int score = GameManager.instance.getScore();
-
-        // if the player answer at least 3 out of 6 questions correct then level complete
-        if (score >= 150)
-        {
-            int timeLeft = GameManager.instance.GetTimeLeft();
-            completeLevelUI.SetActive(true);
-            totalScoreText.text = "Total Score: " + (score + timeLeft).ToString();
-
-            if ((score + timeLeft) > PlayerPrefs.GetInt("HighScore" + currentScene.ToString()))
-            {
-                PlayerPrefs.SetInt("HighScore" + currentScene.ToString(), (score + timeLeft));
-                highScore.text = "High Score: " + (score + timeLeft).ToString();
-            }
-
-            if(levelPassed < (currentScene - 1))
-            {
-                PlayerPrefs.SetInt("LevelsState", (currentScene - 1));
-            }
-
-        } // Else the level failed
-        else
-        {
-            failedLevelUI.SetActive(true);
-        }
+        GameManager.instance.CompleteLevel();
     }
 
-    private void LoadNextScene()
+    // If the player hit on an obstacle and lose
+    private void ReloadLevel()
     {
-        if (state == State.WinStage) {
-            if (SceneManager.GetActiveScene().buildIndex == SceneManager.sceneCountInBuildSettings) {
-                SceneManager.LoadScene(0);
-            }
-            else {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            }
-
-        }
-        else if (state == State.Dying){    
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    // Function that make
     private void Thrust()
     {
         if (Input.GetKey(KeyCode.Space))
@@ -226,6 +165,7 @@ public class Rocket : MonoBehaviour {
         }
     }
 
+    //
     private void Rotate()
     {
         rigidBody.freezeRotation = true;
@@ -240,22 +180,10 @@ public class Rocket : MonoBehaviour {
         {
             transform.Rotate(-Vector3.forward * rotationThisFrame);
         }
-        
-        /*
-        else if (Input.GetKey(KeyCode.UpArrow))
-        {
-            transform.Rotate(Vector3.forward * rotationThisFrame);
-        }
-        else if (Input.GetKey(KeyCode.DownArrow))
-        {
-            transform.Rotate(-Vector3.forward * rotationThisFrame);
-        }
-        */
 
         rigidBody.freezeRotation = false;
     }
 
-    
   
  
     private bool LoadEquations(TextAsset textAssets)
@@ -263,13 +191,11 @@ public class Rocket : MonoBehaviour {
         // Handle any problems that might arise when reading the text
         try
         {
-            var equationsList = TextAssetToList(textAssets);
+            var equationsList = EquationsToList(textAssets);
 
-            int i = 0;
             string line;
 
-
-            for (i = 0; i < equationsList.Count; i++)
+            for (int i = 0; i < equationsList.Count; i++)
             {
                 line = equationsList[i];
                 if (line != null)
@@ -279,48 +205,12 @@ public class Rocket : MonoBehaviour {
                     string[] entries = line.Split('=');
                     if ((entries.Length > 0) && (entries.Length == 2))
                     {
-                        allTheEquations.Add(entries[0] + "=", entries[1]);
+                        allTheEquations.Add(entries[0] + "= ?", entries[1]);
                     }
                 }
             }
-
-            string path = Application.dataPath + "/Resources/equations.txt";
             
-
             return true;
-
-            /*
-            // Create a new StreamReader, tell it which file to read and the encoding of the file
-            StreamReader theReader = new StreamReader(path, Encoding.Default);
-
-            using (theReader)
-            {
-                // While there's lines left in the text file, do this:
-                do
-                {
-                    line = theReader.ReadLine();
-
-                    if (line != null)
-                    {
-                        // I split it into equation and answers based on '=' 
-                        // and then I save them into a dictionary as key and value.
-                        string[] entries = line.Split('=');
-                        if ((entries.Length > 0) && (entries.Length == 2))
-                        {
-                            allTheEquations.Add(entries[0] + "=" , entries[1]);
-                        }
-                    }
-                }
-                while (line != null);
-                // Done reading, close the reader and return true 
-
-                
-
-                theReader.Close();
-                return true;
-                
-            }
-            */
         }
         // If something goes wrong, we throw an exception with some information
         catch (System.Exception e)
@@ -333,66 +223,33 @@ public class Rocket : MonoBehaviour {
     }
 
 
-    private List<string> TextAssetToList(TextAsset ta)
+    private List<string> EquationsToList(TextAsset ta)
     {
         var listToReturn = new List<string>();
         var arrayString = ta.text.Split('\n');
-        foreach (var line in arrayString)
+
+        for(int i=0; i<arrayString.Length; i++)
         {
-            listToReturn.Add(line);
+            listToReturn.Add(arrayString[i]);
         }
+
         return listToReturn;
     }
 
 
     private void SetAnswers()
     {
-        
+
         int index = -1;
-        int i =0;
+        List<int> ansPositions = new List<int>();
+        List<string> ansValues = new List<string>();
 
-        Debug.Log("***********************************************************" + allTheEquations.Count());
-        for (i = 0; i < allTheEquations.Count(); i++)
-        {
-            Debug.Log("Key: " + allTheEquations.ElementAt(i).Key + " Value: " + allTheEquations.ElementAt(i).Value);
-        }
-        Debug.Log("***********************************************************" + allTheEquations.Count());
-
-
-        Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!111111111111!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        for (i=0; i< answers.Length; i++)
-        {
-            checker = answers[i].GetComponent<Checker>();
-            checker.number.text = Random.Range(0, 110).ToString();
-            Debug.Log(answers[i].GetComponent<Checker>().number.text);
-        }
-        Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-
-        /*
-        for (i = 0; i < answers.Length; i=i+3)
-        {
-            // Pick a randomly the equation
-            index = Random.Range(0, level1Passwords.Length);
-            while (selectedEquations.ContainsKey(level1Εquations[index])){                
-                index = Random.Range(0, level1Passwords.Length);
-            }
-
-            selectedEquations.Add(level1Εquations[index], level1Passwords[index]);
-            
-            int temp = Random.Range(i, i+3);
-            checker = answers[temp].GetComponent<Checker>();
-            checker.number.text = level1Passwords[index];
-            answers[temp].GetComponent<BoxCollider>().enabled = true;
-            answers[temp].GetComponent<BoxCollider>().isTrigger = false;
-        }
-        */
-
-
-        for (i = 0; i < answers.Length; i = i + 3)
+        
+        for (int i = 0; i < answers.Length; i = i + 3)
         {
             // Pick the equation Randomly.
             index = Random.Range(0, allTheEquations.Count);
+
             // If that equation has been allready selected, pick another one.
             while (selectedEquations.ContainsKey(allTheEquations.ElementAt(index).Key))
             {
@@ -404,20 +261,36 @@ public class Rocket : MonoBehaviour {
             int temp = Random.Range(i, i + 3);
             checker = answers[temp].GetComponent<Checker>();
             checker.number.text = allTheEquations.ElementAt(index).Value;
+
+            // Save the position and the value of the correct answers. 
+            ansPositions.Add(temp);
+            string content = Regex.Replace(allTheEquations.ElementAt(index).Value, @"\s+", string.Empty);
+            ansValues.Add(content);
         }
 
-
-        Debug.Log("---------------------------------------------------------");
-        for (i = 0; i < selectedEquations.Count(); i++)
+        
+        for (int i = 0; i < answers.Length; i++)
         {
-            Debug.Log("Key: " + selectedEquations.ElementAt(i).Key + " Value: " + selectedEquations.ElementAt(i).Value);
-        }
-        Debug.Log("---------------------------------------------------------");
+            if (ansPositions.Contains(i))
+            {
+                continue;
+            }
+            else
+            { 
+                string rand = Random.Range(0, 110).ToString();
+                while (ansValues.Contains(rand))
+                {
+                    rand = Random.Range(0, 110).ToString();
+                }
 
-        //counter = selectedEquations.Count -1;
+                checker = answers[i].GetComponent<Checker>();
+                checker.number.text = rand;
+            }
+        }
+        
+
         counter = 0;
         equation.text = selectedEquations.ElementAt(counter).Key;
-
 
     }
 

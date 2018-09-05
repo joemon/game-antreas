@@ -14,13 +14,14 @@ public class ScoreBoard : MonoBehaviour {
         total = 0;
     }
 
-
-    /*
-     * Get the values of the highscores for each level from the PlayerPrefs and then update 
-     * the appropriate text field in the scoreboard with these values.
-     * Also, calculates the total score by adding together the highscores from all the levels
-     * and update the totalscore text field in the scoreboard.
-     */
+    
+    /// <summary>
+    /// Update the values of the scoreboard with the highscores.
+    /// Get the values of the highscores for each level from the PlayerPrefs and then update
+    /// the appropriate text field in the scoreboard with these values.
+    /// Also, calculates the total score by adding together the highscores from all the levels
+    /// and update the totalscore text field in the scoreboard.
+    /// </summary>
     public void UpdateScoreboard()
     {
         for (int i = 0; i < scores.Length; i++)

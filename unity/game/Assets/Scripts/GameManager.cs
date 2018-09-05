@@ -9,24 +9,20 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
 
+    // Variable for the AudioMixet to handle the volume of the sounds.
     public AudioMixer audioMixer;
 
-    // Variable for update and display the current score
+    // Variables for update and display the current score on the screen
     public GameObject scoreObject;
-    Text scoreText;
-    int score;
+    private Text scoreText;
+    private int score;
 
-    // Variable for update and display the timer
+    // Variables for update and display the timer on the screen
     public GameObject timerObject;
-    Text timerText;
-    float timeLeft = 300.0f;
-    bool isTimerOn = false;
-
-
+    private Text timerText;
+    private float timeLeft = 300.0f;
+    private bool isTimerOn = false;
     
-
-    // Variable to keep the high score for each level
-    //public Text highScore;
 
     // Variables for the winning screen and loosing screen
     public GameObject completeLevelUI;
@@ -40,6 +36,19 @@ public class GameManager : MonoBehaviour {
     int levelPassed, currentScene;
 
 
+    public void Construct(Text scoreTxt, int scoreNum)
+    {
+        scoreText = scoreTxt;
+        score = scoreNum;
+    }
+
+    public void Construct(float timeLft)
+    {
+        timeLeft = timeLft;
+
+        currentScene = SceneManager.GetActiveScene().buildIndex;
+    }
+
     private void Start()
     {
         audioMixer = GetComponent<AudioMixer>();
@@ -48,7 +57,6 @@ public class GameManager : MonoBehaviour {
         levelPassed = PlayerPrefs.GetInt("LevelsState");
 
         highScore.text = "High Score: " + PlayerPrefs.GetInt("HighScore" + currentScene.ToString()).ToString();
-
     }   
     
     void Update()
@@ -56,9 +64,10 @@ public class GameManager : MonoBehaviour {
         if (isTimerOn == true)
         {
             timeLeft = timeLeft - Time.deltaTime;
+
+            // If time is over then restart the level otherwise update the countdown.
             if (timeLeft < 0)
             {
-                // First load a Game Over screen
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
             else
@@ -93,27 +102,44 @@ public class GameManager : MonoBehaviour {
         return Mathf.RoundToInt(timeLeft);
     }
 
-    public void UpdateScore(int points)
+    public int UpdateScore(int points)
     {
         score = score + points;
         scoreText.text = score.ToString();
+        return score;
+
     }
 
-    public int getScore()
+    public int GetScore()
     {
         return score;
     }
 
-
-    public void CompleteLevel()
+    public void SetScore(int s)
     {
-        int score = getScore();
+        score = s;
+    }
 
+    public Text GetScoreText()
+    {
+        return scoreText;
+    }
+
+    public void SetScoreText(Text txt)
+    {
+        scoreText = txt;
+    }
+
+    public string CompleteLevel()
+    {
+        int score = GetScore();
+        
         // if the player answer at least 3 out of 6 questions correct then level complete
         if (score >= 150)
         {
-            int timeLeft = GameManager.instance.GetTimeLeft();
             completeLevelUI.SetActive(true);
+
+            int timeLeft = GetTimeLeft();
             totalScoreText.text = "Total Score: " + (score + timeLeft).ToString();
 
             if ((score + timeLeft) > PlayerPrefs.GetInt("HighScore" + currentScene.ToString()))
@@ -127,10 +153,12 @@ public class GameManager : MonoBehaviour {
                 PlayerPrefs.SetInt("LevelsState", (currentScene - 1));
             }
 
+            return "Level Completed";
         } // Else the level failed
         else
         {
             failedLevelUI.SetActive(true);
+            return "Level Failed";
         }
     }
 

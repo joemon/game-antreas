@@ -36,12 +36,15 @@ public class Rocket : MonoBehaviour {
 
     public Text equation;
     int counter;
-    
-    
+
+    public void Construct(Dictionary<string, string> allEquations)
+    {
+        allTheEquations = allEquations;
+    }
 
     // Use this for initialization
     void Start () {
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
 
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
@@ -147,7 +150,7 @@ public class Rocket : MonoBehaviour {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    // Function that make
+    
     private void Thrust()
     {
         if (Input.GetKey(KeyCode.Space))
@@ -165,7 +168,7 @@ public class Rocket : MonoBehaviour {
         }
     }
 
-    //
+
     private void Rotate()
     {
         rigidBody.freezeRotation = true;
@@ -186,7 +189,7 @@ public class Rocket : MonoBehaviour {
 
   
  
-    private bool LoadEquations(TextAsset textAssets)
+    public bool LoadEquations(TextAsset textAssets)
     {
         // Handle any problems that might arise when reading the text
         try
@@ -212,14 +215,13 @@ public class Rocket : MonoBehaviour {
             
             return true;
         }
-        // If something goes wrong, we throw an exception with some information
-        catch (System.Exception e)
+        catch (System.Exception e)      
         {
-            System.Console.WriteLine("{0}\n", e.Message);
-            System.Console.WriteLine("{0}\n", e.Message);
+            // If something goes wrong, throw an exception and return false.
+            Debug.Log(e.Message);
             return false;
         }
-
+        
     }
 
 
